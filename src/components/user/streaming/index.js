@@ -65,7 +65,6 @@ export default function Streaming() {
       <div className={styles.stream}>
         {!wait ? (
           <>
-            <h1>{`Please wait until the staff receive your's notification!`}</h1>
             <div className={styles.divImg}>
               <Webcam
                 audio={false}

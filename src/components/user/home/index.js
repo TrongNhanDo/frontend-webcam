@@ -49,20 +49,21 @@ export default function Home() {
   return (
     <div className="container">
       <div className={styles.home}>
-        <h1>WELCOME TO FRONTIER</h1>
-        <h3>Please select the department you want to wait</h3>
+        <h1>USER PAGE</h1>
+        <h3 style={{ color: "red" }}>
+          Please select the department you want to wait
+        </h3>
         <hr />
         {dummy.map((value, index) => {
           return (
-            <>
-              <button
-                onClick={() =>
-                  handleClick(value.departmentId, value.departmentName)
-                }
-              >
-                {value.departmentName}
-              </button>
-            </>
+            <button
+              key={index}
+              onClick={() =>
+                handleClick(value.departmentId, value.departmentName)
+              }
+            >
+              {value.departmentName}
+            </button>
           );
         })}
       </div>

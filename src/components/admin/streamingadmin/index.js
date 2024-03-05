@@ -1,15 +1,16 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import socketIOClient from "socket.io-client";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import styles from "./streaming.module.css";
+import styles from "./streamingadmin.module.css";
 
 export default function StreamingAdmin() {
   const navigate = useNavigate();
   const { state } = useLocation();
+  const [disButton, setDisButton] = useState(true);
 
   useEffect(() => {
     if (!state || !state.departmentId) {
-      navigate("/");
+      navigate("/admin");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -21,8 +22,8 @@ export default function StreamingAdmin() {
   useEffect(() => {
     socketServer.current = socketIOClient.connect(hostSocket);
     socketServer.current.on("receiveImage", (data) => {
-      console.log({ admin: data });
       if (data.departmentId === state.departmentId) {
+        setDisButton(false);
         setImgLink(data.imageSrc);
       }
     });
@@ -33,21 +34,30 @@ export default function StreamingAdmin() {
     socketServer.current.emit("stopCapture", {
       departmentId: state.departmentId,
     });
+    setDisButton(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <div className="container">
       <div className={styles.stream}>
-        <h1>{`Please wait until the staff receive your's notification!`}</h1>
+        <h2>{`Please wait until the staff receive your's notification!`}</h2>
         <div className={styles.divImg}>
-          <img src={imgLink} alt="" />
+          <img
+            src={
+              imgLink ||
+              "https://static.vecteezy.com/system/resources/previews/005/337/799/original/icon-image-not-found-free-vector.jpg"
+            }
+            alt=""
+          />
         </div>
         <div className={styles.divBtn} onClick={handleStopCapture}>
-          <button className={styles.start}>STOP CAPTURE</button>
+          <button disabled={disButton} className={styles.start}>
+            STOP CAPTURE
+          </button>
         </div>
 
-        <Link className={styles.back} to={"/"}>
+        <Link className={styles.back} to={"/admin"}>
           {"< Previous"}
         </Link>
       </div>

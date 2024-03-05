@@ -1,4 +1,4 @@
-.stream h1 {
+.stream h2 {
   text-align: center;
 }
 
@@ -8,9 +8,11 @@
   justify-content: space-between;
 }
 
-.divImg video {
+.divImg img {
+  margin: auto;
   display: block;
-  width: 100%;
+  width: auto;
+  height: 60vh;
 }
 
 .divBtn {
@@ -27,7 +29,7 @@
   border-radius: 5px;
   cursor: pointer;
   color: black;
-  width: 40%;
+  width: 300px;
   font-weight: bold;
 }
 
