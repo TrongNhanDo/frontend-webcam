@@ -1,0 +1,26 @@
+.home h1,
+.home h3 {
+  text-align: center;
+}
+
+.home hr {
+  margin-block-start: 30px;
+  margin-block-end: 30px;
+}
+
+.home button {
+  display: block;
+  float: left;
+  padding: 20px 40px;
+  margin-bottom: 30px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.home button:hover {
+  opacity: 0.7;
+}
+
+.home button:not(:first-child) {
+  margin-left: 40px;
+}

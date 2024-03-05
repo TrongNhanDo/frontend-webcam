@@ -1,0 +1,50 @@
+.stream h1 {
+  text-align: center;
+}
+
+.divImg {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.divImg video {
+  display: block;
+  width: 100%;
+}
+
+.divBtn {
+  display: flex;
+  width: 50%;
+  margin: auto;
+  margin-top: 20px;
+  justify-content: center;
+}
+
+.divBtn button {
+  display: block;
+  padding: 15px 30px;
+  border-radius: 5px;
+  cursor: pointer;
+  color: black;
+  width: 40%;
+  font-weight: bold;
+}
+
+.divBtn button:hover:not([disabled]) {
+  opacity: 0.8;
+}
+
+.start {
+  background-color: green;
+}
+
+.start:disabled {
+  background-color: gray;
+  cursor: not-allowed;
+}
+
+.back {
+  font-size: 18px;
+  font-weight: bold;
+}
