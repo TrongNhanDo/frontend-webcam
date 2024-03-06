@@ -3,6 +3,7 @@ import Webcam from "react-webcam";
 import socketIOClient from "socket.io-client";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import styles from "./streaming.module.css";
+import { hostSocket } from "../../common/constants";
 
 export default function Streaming() {
   const navigate = useNavigate();
@@ -17,7 +18,6 @@ export default function Streaming() {
 
   const webcamRef = useRef(null);
   const socketServer = useRef(null);
-  const hostSocket = "http://localhost:4000/";
   const [disabledBtn, setDisabledBtn] = useState(false);
   const [stop, setStop] = useState(true);
   const [wait, setWait] = useState(false);

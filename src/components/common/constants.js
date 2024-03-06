@@ -27,3 +27,5 @@ export const dummyDepartment = [
 
 export const notFaultImg =
   "https://static.vecteezy.com/system/resources/previews/005/337/799/original/icon-image-not-found-free-vector.jpg";
+
+export const hostSocket = "https://backend-webcam.onrender.com/";

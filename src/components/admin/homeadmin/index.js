@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./homeadmin.module.css";
 import socketIOClient from "socket.io-client";
-import { dummyDepartment } from "../../common/constants";
+import { dummyDepartment, hostSocket } from "../../common/constants";
 
 export default function HomeAdmin() {
   const navigate = useNavigate();
@@ -25,7 +25,6 @@ export default function HomeAdmin() {
   }, []);
 
   useEffect(() => {
-    const hostSocket = "http://localhost:4000/";
     socketServer.current = socketIOClient.connect(hostSocket);
     socketServer.current.on("receiveImage", (data) => {
       if (!data) {

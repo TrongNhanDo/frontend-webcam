@@ -2,7 +2,11 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import socketIOClient from "socket.io-client";
 import { Link } from "react-router-dom";
 import styles from "./streamingadmin2.module.css";
-import { dummyDepartment, notFaultImg } from "../../common/constants";
+import {
+  dummyDepartment,
+  hostSocket,
+  notFaultImg,
+} from "../../common/constants";
 
 export default function StreamingAdmin2() {
   let buttons = [];
@@ -10,7 +14,6 @@ export default function StreamingAdmin2() {
   const [disButton, setDisButton] = useState([]);
   const [imgLink, setImgLink] = useState([]);
   const socketServer = useRef(null);
-  const hostSocket = "http://localhost:4000/";
 
   useEffect(() => {
     socketServer.current = socketIOClient.connect(hostSocket);

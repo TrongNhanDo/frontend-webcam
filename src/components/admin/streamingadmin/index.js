@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import socketIOClient from "socket.io-client";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import styles from "./streamingadmin.module.css";
+import { hostSocket } from "../../common/constants";
 
 export default function StreamingAdmin() {
   const navigate = useNavigate();
@@ -17,7 +18,6 @@ export default function StreamingAdmin() {
 
   const [imgLink, setImgLink] = useState("");
   const socketServer = useRef(null);
-  const hostSocket = "http://localhost:4000/";
 
   useEffect(() => {
     socketServer.current = socketIOClient.connect(hostSocket);
