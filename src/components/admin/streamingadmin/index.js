@@ -41,7 +41,7 @@ export default function StreamingAdmin() {
   return (
     <div className="container">
       <div className={styles.stream}>
-        <h2>{`Please wait until the staff receive your's notification!`}</h2>
+        <h2>A visitor is waiting to be check-in</h2>
         <div className={styles.divImg}>
           <img
             src={
@@ -58,7 +58,8 @@ export default function StreamingAdmin() {
         </div>
 
         <Link className={styles.back} to={"/admin"}>
-          {"< Previous"}
+          <i class="fa-solid fa-backward"></i>
+          {" Previous"}
         </Link>
       </div>
     </div>

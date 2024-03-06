@@ -65,6 +65,7 @@ export default function Streaming() {
       <div className={styles.stream}>
         {!wait ? (
           <>
+            <h2>Please wait for someone to come get you!</h2>
             <div className={styles.divImg}>
               <Webcam
                 audio={false}
@@ -81,18 +82,24 @@ export default function Streaming() {
                 disabled={disabledBtn}
                 onClick={() => setStop(false)}
               >
-                START
+                START CAPTURE
               </button>
             </div>
           </>
         ) : (
           <>
-            <h1>Please wait for someone to come get you!</h1>
+            <h2>Please wait for someone to come get you!</h2>
+            <img
+              src="https://png.pngtree.com/png-clipart/20210718/original/pngtree-wait-a-moment-please-text-korean-speech-bubble-cute-free-png-png-image_6545669.jpg"
+              alt=""
+              style={{ width: "100%", height: "600px", objectFit: "fill" }}
+            />
           </>
         )}
 
         <Link className={styles.back} to={"/"}>
-          {"< Previous"}
+          <i class="fa-solid fa-backward"></i>
+          {" Previous"}
         </Link>
       </div>
     </div>
