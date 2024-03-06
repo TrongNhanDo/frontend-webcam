@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/frontend-webcam/static/css/main.6b699625.css",
+    "main.js": "/frontend-webcam/static/js/main.38b63369.js",
+    "index.html": "/frontend-webcam/index.html",
+    "main.6b699625.css.map": "/frontend-webcam/static/css/main.6b699625.css.map",
+    "main.38b63369.js.map": "/frontend-webcam/static/js/main.38b63369.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.6b699625.css",
+    "static/js/main.38b63369.js"
+  ]
+}
