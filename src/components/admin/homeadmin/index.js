@@ -2,33 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./homeadmin.module.css";
 import socketIOClient from "socket.io-client";
-
-const dummy = [
-  {
-    departmentId: 1,
-    departmentName: "Department 1",
-  },
-  {
-    departmentId: 2,
-    departmentName: "Department 2",
-  },
-  {
-    departmentId: 3,
-    departmentName: "Department 3",
-  },
-  {
-    departmentId: 4,
-    departmentName: "Department 4",
-  },
-  {
-    departmentId: 5,
-    departmentName: "Department 5",
-  },
-  {
-    departmentId: 6,
-    departmentName: "Department 6",
-  },
-];
+import { dummyDepartment } from "../../common/constants";
 
 export default function HomeAdmin() {
   const navigate = useNavigate();
@@ -73,7 +47,7 @@ export default function HomeAdmin() {
         <h1>ADMIN PAGE</h1>
         <h3 style={{ color: "red" }}>A visitor is waiting to be check-in</h3>
         <hr />
-        {dummy.map((value, index) => {
+        {dummyDepartment.map((value, index) => {
           return (
             <button
               key={index}

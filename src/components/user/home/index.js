@@ -1,33 +1,7 @@
 import React, { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./home.module.css";
-
-const dummy = [
-  {
-    departmentId: 1,
-    departmentName: "Department 1",
-  },
-  {
-    departmentId: 2,
-    departmentName: "Department 2",
-  },
-  {
-    departmentId: 3,
-    departmentName: "Department 3",
-  },
-  {
-    departmentId: 4,
-    departmentName: "Department 4",
-  },
-  {
-    departmentId: 5,
-    departmentName: "Department 5",
-  },
-  {
-    departmentId: 6,
-    departmentName: "Department 6",
-  },
-];
+import { dummyDepartment } from "../../common/constants";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -54,7 +28,7 @@ export default function Home() {
           Please select the department you want to wait
         </h3>
         <hr />
-        {dummy.map((value, index) => {
+        {dummyDepartment.map((value, index) => {
           return (
             <button
               key={index}
