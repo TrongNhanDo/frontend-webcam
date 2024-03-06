@@ -15,31 +15,34 @@ export default function StreamingAdmin2() {
   useEffect(() => {
     socketServer.current = socketIOClient.connect(hostSocket);
     socketServer.current.on("receiveImage", (data) => {
-      if (!data) {
-        links.length = 0;
-        setImgLink([]);
-        buttons.length = 0;
-        setDisButton([]);
-        return;
-      }
+      if (!data) return;
 
-      if (!links.find((value) => value.departmentId === data.departmentId)) {
-        links.push({
-          departmentId: data.departmentId,
-          imageSrc: data.imageSrc,
-        });
-        setImgLink(links);
-        buttons.push(data.departmentId);
-        setDisButton(buttons);
+      let index = links.findIndex((e) => e.departmentId === data.departmentId);
+      if (links.length && index >= 0) {
+        links[index].imageSrc = data.imageSrc;
+      } else {
+        links.push(data);
       }
+      setImgLink([...links]);
+
+      let index2 = buttons.findIndex((e) => e === data.departmentId);
+      if (buttons.length && index2 >= 0) {
+        buttons[index2] = data.departmentId;
+      } else {
+        buttons.push(data.departmentId);
+      }
+      setDisButton([...buttons]);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleStopCapture = useCallback((departmentId) => {
     socketServer.current.emit("stopCapture", { departmentId });
-    const newArr = buttons.filter((e) => e !== departmentId);
-    setDisButton(newArr);
+    let index = buttons.findIndex((e) => e === departmentId);
+    if (index > -1) {
+      buttons.splice(index, 1);
+      setDisButton([...buttons]);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -49,7 +52,7 @@ export default function StreamingAdmin2() {
         <h2>A visitor is waiting to be check-in</h2>
         <hr />
         <div className={styles.divImg}>
-          {dummyDepartment.map((value, index) => {
+          {dummyDepartment?.map((value, index) => {
             return (
               <div key={index} className={styles.cam}>
                 <span>{value.departmentName}</span>
@@ -58,18 +61,14 @@ export default function StreamingAdmin2() {
                     imgLink.find((e) => e.departmentId === value.departmentId)
                       ? imgLink.find(
                           (e) => e.departmentId === value.departmentId
-                        ).imageSrc
+                        ).imageSrc || notFaultImg
                       : notFaultImg
                   }
                   alt=""
                 />
                 <button
                   type="button"
-                  disabled={
-                    !disButton.find(
-                      (e) => e.departmentId === value.departmentId
-                    )
-                  }
+                  disabled={!disButton.includes(value.departmentId)}
                   className={styles.start}
                   title={value.departmentName}
                   onClick={() => handleStopCapture(value.departmentId)}
@@ -82,7 +81,7 @@ export default function StreamingAdmin2() {
         </div>
         <div className={styles.bottom}>
           <Link className={styles.back} to={"/admin"}>
-            <i class="fa-solid fa-backward"></i>
+            <i className="fa-solid fa-backward"></i>
             {" Previous"}
           </Link>
         </div>
