@@ -15,27 +15,38 @@ export default function StreamingAdmin2() {
   const [imgLink, setImgLink] = useState([]);
   const socketServer = useRef(null);
 
+  const handleSocket = useCallback((data) => {
+    if (!data) return;
+
+    let index = links.findIndex((e) => e.departmentId === data.departmentId);
+    if (links.length && index >= 0) {
+      links[index].imageSrc = data.imageSrc;
+    } else {
+      links.push(data);
+    }
+    setImgLink([...links]);
+
+    let index2 = buttons.findIndex((e) => e === data.departmentId);
+    if (buttons.length && index2 >= 0) {
+      buttons[index2] = data.departmentId;
+    } else {
+      buttons.push(data.departmentId);
+    }
+    setDisButton([...buttons]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   useEffect(() => {
     socketServer.current = socketIOClient.connect(hostSocket);
     socketServer.current.on("receiveImage", (data) => {
-      if (!data) return;
-
-      let index = links.findIndex((e) => e.departmentId === data.departmentId);
-      if (links.length && index >= 0) {
-        links[index].imageSrc = data.imageSrc;
-      } else {
-        links.push(data);
-      }
-      setImgLink([...links]);
-
-      let index2 = buttons.findIndex((e) => e === data.departmentId);
-      if (buttons.length && index2 >= 0) {
-        buttons[index2] = data.departmentId;
-      } else {
-        buttons.push(data.departmentId);
-      }
-      setDisButton([...buttons]);
+      handleSocket(data);
     });
+
+    return () => {
+      socketServer.current.off("receiveImage", (data) => {
+        handleSocket(data);
+      });
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -64,7 +75,7 @@ export default function StreamingAdmin2() {
                     imgLink.find((e) => e.departmentId === value.departmentId)
                       ? imgLink.find(
                           (e) => e.departmentId === value.departmentId
-                        ).imageSrc || notFaultImg
+                        ).imageSrc
                       : notFaultImg
                   }
                   alt=""

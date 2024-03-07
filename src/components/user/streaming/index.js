@@ -49,14 +49,27 @@ export default function Streaming() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stop]);
 
-  useEffect(() => {
-    socketServer.current = socketIOClient.connect(hostSocket);
-    socketServer.current.on("stopCaptureCommand", (data) => {
+  const handleData = useCallback(
+    (data) => {
       if (data.departmentId === state.departmentId) {
         setStop(true);
         setWait(true);
       }
+    },
+    [state.departmentId]
+  );
+
+  useEffect(() => {
+    socketServer.current = socketIOClient.connect(hostSocket);
+    socketServer.current.on("stopCaptureCommand", (data) => {
+      handleData(data);
     });
+
+    return () => {
+      socketServer.current.off("stopCaptureCommand", (data) => {
+        handleData(data);
+      });
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
