@@ -24,8 +24,7 @@ export default function Streaming() {
 
   const capture = useCallback(
     (stop) => {
-      if (stop) return;
-
+      if (!stop) return;
       const imageSrc = webcamRef.current.getScreenshot();
       socketServer.current.emit("sendImage", {
         departmentId: state.departmentId,
@@ -34,6 +33,10 @@ export default function Streaming() {
     },
     [state.departmentId]
   );
+
+  const handleCapture = useCallback(() => {
+    setStop(false);
+  }, []);
 
   useEffect(() => {
     if (stop) {
@@ -83,7 +86,7 @@ export default function Streaming() {
       <div className={styles.stream}>
         {!wait ? (
           <>
-            <h2>Please wait for someone to come get you!</h2>
+            <h2>{state.departmentName || ""}</h2>
             <div className={styles.divImg}>
               <Webcam
                 audio={false}
@@ -98,7 +101,7 @@ export default function Streaming() {
               <button
                 className={styles.start}
                 disabled={disabledBtn}
-                onClick={() => setStop(false)}
+                onClick={handleCapture}
               >
                 START CAPTURE
               </button>
