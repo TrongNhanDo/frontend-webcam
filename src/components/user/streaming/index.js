@@ -22,17 +22,18 @@ export default function Streaming() {
   const [stop, setStop] = useState(true);
   const [wait, setWait] = useState(false);
 
-  const capture = useCallback((count) => {
-    if (stop) return;
+  const capture = useCallback(
+    (stop) => {
+      if (stop) return;
 
-    const imageSrc = webcamRef.current.getScreenshot();
-    socketServer.current.emit("sendImage", {
-      departmentId: state.departmentId,
-      imageSrc,
-      count,
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+      const imageSrc = webcamRef.current.getScreenshot();
+      socketServer.current.emit("sendImage", {
+        departmentId: state.departmentId,
+        imageSrc,
+      });
+    },
+    [state.departmentId]
+  );
 
   useEffect(() => {
     if (stop) {
@@ -44,18 +45,20 @@ export default function Streaming() {
     const interval = setInterval(() => {
       times += 1;
       setDisabledBtn(true);
-      capture(times);
+      capture(times, stop);
     }, 100);
 
     return () => clearInterval(interval);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [stop]);
+  }, [stop, capture]);
 
   const handleData = useCallback(
-    (data) => {
+    async (data) => {
       if (data.departmentId === state.departmentId) {
-        setStop(true);
-        setWait(true);
+        await setStop(true);
+        await setWait(true);
+        socketServer.current.emit("stopCaptureDone", {
+          departmentId: state.departmentId,
+        });
       }
     },
     [state.departmentId]

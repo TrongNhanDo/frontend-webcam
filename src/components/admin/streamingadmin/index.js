@@ -13,8 +13,7 @@ export default function StreamingAdmin() {
     if (!state || !state.departmentId) {
       navigate("/admin");
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [navigate, state]);
 
   const [imgLink, setImgLink] = useState("");
   const socketServer = useRef(null);
@@ -29,27 +28,42 @@ export default function StreamingAdmin() {
     [state.departmentId]
   );
 
+  const handleDisabledButton = useCallback(
+    (data) => {
+      if (data.departmentId === state.departmentId) {
+        setDisButton(true);
+      }
+    },
+    [state.departmentId]
+  );
+
   useEffect(() => {
     socketServer.current = socketIOClient.connect(hostSocket);
     socketServer.current.on("receiveImage", (data) => {
       handleSocket(data);
     });
 
+    socketServer.current.on("disabledCapture", (data) => {
+      handleDisabledButton(data);
+    });
+
     return () => {
       socketServer.current.off("receiveImage", (data) => {
         handleSocket(data);
+      });
+
+      socketServer.current.off("disabledCapture", (data) => {
+        handleDisabledButton(data);
       });
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleStopCapture = useCallback(() => {
+  const handleStopCapture = useCallback(async () => {
     socketServer.current.emit("stopCapture", {
       departmentId: state.departmentId,
     });
-    setDisButton(true);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [state.departmentId]);
 
   return (
     <div className="container">

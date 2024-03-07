@@ -36,15 +36,31 @@ export default function StreamingAdmin2() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const handleDisButton = useCallback((data, buttons) => {
+    let index = buttons.findIndex((e) => e === data.departmentId);
+    if (index > -1) {
+      buttons.splice(index, 1);
+      setDisButton([...buttons]);
+    }
+  }, []);
+
   useEffect(() => {
     socketServer.current = socketIOClient.connect(hostSocket);
     socketServer.current.on("receiveImage", (data) => {
       handleSocket(data);
     });
 
+    socketServer.current.on("disabledCapture", (data) => {
+      handleDisButton(data, buttons);
+    });
+
     return () => {
       socketServer.current.off("receiveImage", (data) => {
         handleSocket(data);
+      });
+
+      socketServer.current.off("disabledCapture", (data) => {
+        handleDisButton(data, buttons);
       });
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -52,11 +68,6 @@ export default function StreamingAdmin2() {
 
   const handleStopCapture = useCallback((departmentId) => {
     socketServer.current.emit("stopCapture", { departmentId });
-    let index = buttons.findIndex((e) => e === departmentId);
-    if (index > -1) {
-      buttons.splice(index, 1);
-      setDisButton([...buttons]);
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

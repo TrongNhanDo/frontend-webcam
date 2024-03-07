@@ -24,30 +24,27 @@ export default function HomeAdmin() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleSocket = useCallback(
-    (data) => {
-      if (!data) {
-        setArrayId([]);
-        return;
-      }
+  const handleSocket = useCallback((data, ids) => {
+    if (!data) {
+      setArrayId([]);
+      return;
+    }
 
-      if (!ids.includes(data.departmentId)) {
-        ids.push(data.departmentId);
-        setArrayId(ids);
-      }
-    },
-    [ids]
-  );
+    if (!ids.includes(data.departmentId)) {
+      ids.push(data.departmentId);
+      setArrayId(ids);
+    }
+  }, []);
 
   useEffect(() => {
     socketServer.current = socketIOClient.connect(hostSocket);
     socketServer.current.on("receiveImage", (data) => {
-      handleSocket(data);
+      handleSocket(data, ids);
     });
 
     return () => {
       socketServer.current.off("receiveImage", (data) => {
-        handleSocket(data);
+        handleSocket(data, ids);
       });
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
