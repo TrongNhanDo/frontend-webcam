@@ -24,9 +24,8 @@ export default function HomeAdmin() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    socketServer.current = socketIOClient.connect(hostSocket);
-    socketServer.current.on("receiveImage", (data) => {
+  const handleSocket = useCallback(
+    (data) => {
       if (!data) {
         setArrayId([]);
         return;
@@ -36,7 +35,21 @@ export default function HomeAdmin() {
         ids.push(data.departmentId);
         setArrayId(ids);
       }
+    },
+    [ids]
+  );
+
+  useEffect(() => {
+    socketServer.current = socketIOClient.connect(hostSocket);
+    socketServer.current.on("receiveImage", (data) => {
+      handleSocket(data);
     });
+
+    return () => {
+      socketServer.current.off("receiveImage", (data) => {
+        handleSocket(data);
+      });
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
