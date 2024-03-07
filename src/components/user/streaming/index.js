@@ -111,7 +111,7 @@ export default function Streaming() {
         )}
 
         <Link className={styles.back} to={"/"}>
-          <i class="fa-solid fa-backward"></i>
+          <i className="fa-solid fa-backward"></i>
           {" Previous"}
         </Link>
       </div>

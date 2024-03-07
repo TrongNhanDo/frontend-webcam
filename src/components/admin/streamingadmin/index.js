@@ -71,7 +71,7 @@ export default function StreamingAdmin() {
         </div>
 
         <Link className={styles.back} to={"/admin"}>
-          <i class="fa-solid fa-backward"></i>
+          <i className="fa-solid fa-backward"></i>
           {" Previous"}
         </Link>
       </div>
