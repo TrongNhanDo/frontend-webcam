@@ -23,6 +23,8 @@ export default function Streaming() {
   const [wait, setWait] = useState(false);
 
   const capture = useCallback((count) => {
+    if (stop) return;
+
     const imageSrc = webcamRef.current.getScreenshot();
     socketServer.current.emit("sendImage", {
       departmentId: state.departmentId,
