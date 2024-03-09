@@ -71,6 +71,10 @@ export default function StreamingAdmin2() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    socketServer.current.emit("sendDepartmentList", { listId: disButton });
+  }, [disButton]);
+
   return (
     <div className={styles.container}>
       <div className={styles.stream}>

@@ -1,10 +1,12 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import socketIOClient from "socket.io-client";
 import styles from "./home.module.css";
-import { dummyDepartment } from "../../common/constants";
+import { dummyDepartment, hostSocket } from "../../common/constants";
 
 export default function Home() {
   const navigate = useNavigate();
+  const [listId, setListId] = useState([]);
 
   const handleClick = useCallback((departmentId, departmentName) => {
     try {
@@ -20,6 +22,25 @@ export default function Home() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const handleSocket = useCallback((data) => {
+    setListId(data.listId);
+  }, []);
+
+  const socketServer = useRef(null);
+  useEffect(() => {
+    socketServer.current = socketIOClient.connect(hostSocket);
+    socketServer.current.on("receiveDepartmentList", (data) => {
+      handleSocket(data);
+    });
+
+    return () => {
+      socketServer.current.off("receiveDepartmentList", (data) => {
+        handleSocket(data);
+      });
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <div className="container">
       <div className={styles.home}>
@@ -32,6 +53,7 @@ export default function Home() {
           return (
             <button
               key={index}
+              disabled={listId.includes(value.departmentId)}
               onClick={() =>
                 handleClick(value.departmentId, value.departmentName)
               }

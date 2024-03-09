@@ -17,7 +17,12 @@
   cursor: pointer;
 }
 
-.home button:hover {
+.home button:disabled {
+  background-color: gray;
+  cursor: not-allowed;
+}
+
+.home button:hover:not(:disabled) {
   opacity: 0.7;
 }
 
