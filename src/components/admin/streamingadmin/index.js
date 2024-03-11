@@ -1,8 +1,8 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import styles from "./streamingadmin.module.css";
 
-export default function StreamingAdmin({ socket }) {
+export default function StreamingAdmin({ socketServer }) {
   const navigate = useNavigate();
   const { state } = useLocation();
   const [disButton, setDisButton] = useState(true);
@@ -14,8 +14,6 @@ export default function StreamingAdmin({ socket }) {
   }, [navigate, state]);
 
   const [imgLink, setImgLink] = useState("");
-  const socketServer = useRef(null);
-  socketServer.current = socket;
 
   const handleSocket = useCallback(
     (data) => {
@@ -37,30 +35,24 @@ export default function StreamingAdmin({ socket }) {
   );
 
   useEffect(() => {
-    socketServer.current.on("receiveImage", (data) => {
+    socketServer.on("receiveImage", (data) => {
       handleSocket(data);
     });
 
-    socketServer.current.on("disabledCapture", (data) => {
+    socketServer.on("disabledCapture", (data) => {
       handleDisabledButton(data);
     });
 
     return () => {
-      socketServer.current.off("receiveImage", (data) => {
-        handleSocket(data);
-      });
-
-      socketServer.current.off("disabledCapture", (data) => {
-        handleDisabledButton(data);
-      });
+      socketServer.disconnect();
     };
-  }, [handleDisabledButton, handleSocket]);
+  }, [handleDisabledButton, handleSocket, socketServer]);
 
   const handleStopCapture = useCallback(async () => {
-    socketServer.current.emit("stopCapture", {
+    socketServer.emit("stopCapture", {
       departmentId: state.departmentId,
     });
-  }, [state.departmentId]);
+  }, [state.departmentId, socketServer]);
 
   return (
     <div className="container">

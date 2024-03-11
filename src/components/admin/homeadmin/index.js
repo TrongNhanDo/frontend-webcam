@@ -1,12 +1,10 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./homeadmin.module.css";
 import { dummyDepartment } from "../../common/constants";
 
-export default function HomeAdmin({ socket }) {
+export default function HomeAdmin({ socketServer }) {
   const navigate = useNavigate();
-  const socketServer = useRef(null);
-  socketServer.current = socket;
   const ids = [];
   const [arrayId, setArrayId] = useState([]);
 
@@ -39,17 +37,15 @@ export default function HomeAdmin({ socket }) {
   }, []);
 
   useEffect(() => {
-    socketServer.current.on("receiveImage", (data) => {
+    socketServer.on("receiveImage", (data) => {
       handleSocket(data, ids);
     });
 
     return () => {
-      socketServer.current.off("receiveImage", (data) => {
-        handleSocket(data, ids);
-      });
+      socketServer.disconnect();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [handleSocket]);
+  }, [handleSocket, socketServer]);
 
   return (
     <div className="container">

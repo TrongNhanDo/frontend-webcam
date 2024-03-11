@@ -1,9 +1,9 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./home.module.css";
 import { dummyDepartment } from "../../common/constants";
 
-export default function Home({ socket }) {
+export default function Home({ socketServer }) {
   const navigate = useNavigate();
   const [listId, setListId] = useState([]);
 
@@ -27,20 +27,15 @@ export default function Home({ socket }) {
     setListId(data.listId);
   }, []);
 
-  const socketServer = useRef(null);
-  socketServer.current = socket;
-
   useEffect(() => {
-    socketServer.current.on("receiveDepartmentList", (data) => {
+    socketServer.on("receiveDepartmentList", (data) => {
       handleSocket(data);
     });
 
     return () => {
-      socketServer.current.off("receiveDepartmentList", (data) => {
-        handleSocket(data);
-      });
+      socketServer.disconnect();
     };
-  }, [handleSocket]);
+  }, [handleSocket, socketServer]);
 
   return (
     <div className="container">

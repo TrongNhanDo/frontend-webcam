@@ -3,9 +3,13 @@ import Webcam from "react-webcam";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import styles from "./streaming.module.css";
 
-export default function Streaming({ socket }) {
+export default function Streaming({ socketServer }) {
   const navigate = useNavigate();
   const { state } = useLocation();
+  const webcamRef = useRef(null);
+  const [disabledBtn, setDisabledBtn] = useState(false);
+  const [stop, setStop] = useState(true);
+  const [wait, setWait] = useState(false);
 
   useEffect(() => {
     if (!state || !state.departmentId) {
@@ -13,23 +17,16 @@ export default function Streaming({ socket }) {
     }
   }, [navigate, state]);
 
-  const webcamRef = useRef(null);
-  const socketServer = useRef(null);
-  socketServer.current = socket;
-  const [disabledBtn, setDisabledBtn] = useState(false);
-  const [stop, setStop] = useState(true);
-  const [wait, setWait] = useState(false);
-
   const capture = useCallback(
     (stop) => {
       if (!stop) return;
       const imageSrc = webcamRef.current.getScreenshot();
-      socketServer.current.emit("sendImage", {
+      socketServer.emit("sendImage", {
         departmentId: state.departmentId,
         imageSrc,
       });
     },
-    [state.departmentId]
+    [state.departmentId, socketServer]
   );
 
   const handleCapture = useCallback(() => {
@@ -57,25 +54,23 @@ export default function Streaming({ socket }) {
       if (data.departmentId === state.departmentId) {
         await setStop(true);
         await setWait(true);
-        socketServer.current.emit("stopCaptureDone", {
+        socketServer.emit("stopCaptureDone", {
           departmentId: state.departmentId,
         });
       }
     },
-    [state.departmentId]
+    [state.departmentId, socketServer]
   );
 
   useEffect(() => {
-    socketServer.current.on("stopCaptureCommand", (data) => {
+    socketServer.on("stopCaptureCommand", (data) => {
       handleData(data);
     });
 
     return () => {
-      socketServer.current.off("stopCaptureCommand", (data) => {
-        handleData(data);
-      });
+      socketServer.disconnect();
     };
-  }, [handleData]);
+  }, [handleData, socketServer]);
 
   return (
     <div className="container">

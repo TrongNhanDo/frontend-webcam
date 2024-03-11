@@ -1,15 +1,13 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styles from "./streamingadmin2.module.css";
 import { dummyDepartment, notFaultImg } from "../../common/constants";
 
-export default function StreamingAdmin2({ socket }) {
+export default function StreamingAdmin2({ socketServer }) {
   let buttons = [];
   let links = [];
   const [disButton, setDisButton] = useState([]);
   const [imgLink, setImgLink] = useState([]);
-  const socketServer = useRef(null);
-  socketServer.current = socket;
 
   const handleSocket = useCallback((data) => {
     if (!data) return;
@@ -41,33 +39,30 @@ export default function StreamingAdmin2({ socket }) {
   }, []);
 
   useEffect(() => {
-    socketServer.current.on("receiveImage", (data) => {
+    socketServer.on("receiveImage", (data) => {
       handleSocket(data);
     });
 
-    socketServer.current.on("disabledCapture", (data) => {
+    socketServer.on("disabledCapture", (data) => {
       handleDisButton(data, buttons);
     });
 
     return () => {
-      socketServer.current.off("receiveImage", (data) => {
-        handleSocket(data);
-      });
-
-      socketServer.current.off("disabledCapture", (data) => {
-        handleDisButton(data, buttons);
-      });
+      socketServer.disconnect();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [handleSocket, handleDisButton]);
+  }, [handleSocket, handleDisButton, socketServer]);
 
-  const handleStopCapture = useCallback((departmentId) => {
-    socketServer.current.emit("stopCapture", { departmentId });
-  }, []);
+  const handleStopCapture = useCallback(
+    (departmentId) => {
+      socketServer.emit("stopCapture", { departmentId });
+    },
+    [socketServer]
+  );
 
   useEffect(() => {
-    socketServer.current.emit("sendDepartmentList", { listId: disButton });
-  }, [disButton, imgLink]);
+    socketServer.emit("sendDepartmentList", { listId: disButton });
+  }, [disButton, imgLink, socketServer]);
 
   return (
     <div className={styles.container}>
