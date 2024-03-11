@@ -84,7 +84,7 @@ export default function StreamingAdmin2({ socket }) {
                     imgLink.find((e) => e.departmentId === value.departmentId)
                       ? imgLink.find(
                           (e) => e.departmentId === value.departmentId
-                        ).imageSrc
+                        ).imageSrc || notFaultImg
                       : notFaultImg
                   }
                   alt=""

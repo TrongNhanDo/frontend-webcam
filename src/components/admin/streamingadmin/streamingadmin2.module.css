@@ -23,11 +23,13 @@
 
 .divImg img {
   display: block;
+  margin: auto;
   float: left;
-  width: 100%;
   height: 30vh;
+  width: auto;
+  object-fit: contain;
   border-radius: 5px;
-  margin-right: 3%;
+  border: 1px solid lightgray;
 }
 
 .divImg span {
@@ -95,10 +97,10 @@
 .cam {
   display: flex;
   float: left;
-  width: 30%;
+  width: 23%;
   height: 100%;
   flex-direction: column;
-  margin-left: 2.7%;
+  margin-left: 2%;
   justify-content: center;
   align-items: center;
 }
