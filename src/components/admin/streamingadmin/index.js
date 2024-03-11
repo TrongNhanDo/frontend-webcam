@@ -1,10 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import socketIOClient from "socket.io-client";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import styles from "./streamingadmin.module.css";
-import { hostSocket } from "../../common/constants";
 
-export default function StreamingAdmin() {
+export default function StreamingAdmin({ socket }) {
   const navigate = useNavigate();
   const { state } = useLocation();
   const [disButton, setDisButton] = useState(true);
@@ -17,6 +15,7 @@ export default function StreamingAdmin() {
 
   const [imgLink, setImgLink] = useState("");
   const socketServer = useRef(null);
+  socketServer.current = socket;
 
   const handleSocket = useCallback(
     (data) => {
@@ -38,7 +37,6 @@ export default function StreamingAdmin() {
   );
 
   useEffect(() => {
-    socketServer.current = socketIOClient.connect(hostSocket);
     socketServer.current.on("receiveImage", (data) => {
       handleSocket(data);
     });
@@ -56,8 +54,7 @@ export default function StreamingAdmin() {
         handleDisabledButton(data);
       });
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [handleDisabledButton, handleSocket]);
 
   const handleStopCapture = useCallback(async () => {
     socketServer.current.emit("stopCapture", {

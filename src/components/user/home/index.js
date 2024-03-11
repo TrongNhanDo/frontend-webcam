@@ -1,34 +1,36 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import socketIOClient from "socket.io-client";
 import styles from "./home.module.css";
-import { dummyDepartment, hostSocket } from "../../common/constants";
+import { dummyDepartment } from "../../common/constants";
 
-export default function Home() {
+export default function Home({ socket }) {
   const navigate = useNavigate();
   const [listId, setListId] = useState([]);
 
-  const handleClick = useCallback((departmentId, departmentName) => {
-    try {
-      navigate("/department", {
-        state: {
-          departmentId,
-          departmentName,
-        },
-      });
-    } catch (error) {
-      throw error;
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const handleClick = useCallback(
+    (departmentId, departmentName) => {
+      try {
+        navigate("/department", {
+          state: {
+            departmentId,
+            departmentName,
+          },
+        });
+      } catch (error) {
+        throw error;
+      }
+    },
+    [navigate]
+  );
 
   const handleSocket = useCallback((data) => {
     setListId(data.listId);
   }, []);
 
   const socketServer = useRef(null);
+  socketServer.current = socket;
+
   useEffect(() => {
-    socketServer.current = socketIOClient.connect(hostSocket);
     socketServer.current.on("receiveDepartmentList", (data) => {
       handleSocket(data);
     });
@@ -38,8 +40,7 @@ export default function Home() {
         handleSocket(data);
       });
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [handleSocket]);
 
   return (
     <div className="container">

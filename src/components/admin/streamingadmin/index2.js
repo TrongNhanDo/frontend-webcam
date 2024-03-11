@@ -1,19 +1,15 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import socketIOClient from "socket.io-client";
 import { Link } from "react-router-dom";
 import styles from "./streamingadmin2.module.css";
-import {
-  dummyDepartment,
-  hostSocket,
-  notFaultImg,
-} from "../../common/constants";
+import { dummyDepartment, notFaultImg } from "../../common/constants";
 
-export default function StreamingAdmin2() {
+export default function StreamingAdmin2({ socket }) {
   let buttons = [];
   let links = [];
   const [disButton, setDisButton] = useState([]);
   const [imgLink, setImgLink] = useState([]);
   const socketServer = useRef(null);
+  socketServer.current = socket;
 
   const handleSocket = useCallback((data) => {
     if (!data) return;
@@ -45,7 +41,6 @@ export default function StreamingAdmin2() {
   }, []);
 
   useEffect(() => {
-    socketServer.current = socketIOClient.connect(hostSocket);
     socketServer.current.on("receiveImage", (data) => {
       handleSocket(data);
     });
@@ -64,11 +59,10 @@ export default function StreamingAdmin2() {
       });
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [handleSocket, handleDisButton]);
 
   const handleStopCapture = useCallback((departmentId) => {
     socketServer.current.emit("stopCapture", { departmentId });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

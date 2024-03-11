@@ -1,28 +1,30 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./homeadmin.module.css";
-import socketIOClient from "socket.io-client";
-import { dummyDepartment, hostSocket } from "../../common/constants";
+import { dummyDepartment } from "../../common/constants";
 
-export default function HomeAdmin() {
+export default function HomeAdmin({ socket }) {
   const navigate = useNavigate();
   const socketServer = useRef(null);
+  socketServer.current = socket;
   const ids = [];
   const [arrayId, setArrayId] = useState([]);
 
-  const handleClick = useCallback((departmentId, departmentName) => {
-    try {
-      navigate("/admin/department", {
-        state: {
-          departmentId,
-          departmentName,
-        },
-      });
-    } catch (error) {
-      throw error;
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const handleClick = useCallback(
+    (departmentId, departmentName) => {
+      try {
+        navigate("/admin/department", {
+          state: {
+            departmentId,
+            departmentName,
+          },
+        });
+      } catch (error) {
+        throw error;
+      }
+    },
+    [navigate]
+  );
 
   const handleSocket = useCallback((data, ids) => {
     if (!data) {
@@ -37,7 +39,6 @@ export default function HomeAdmin() {
   }, []);
 
   useEffect(() => {
-    socketServer.current = socketIOClient.connect(hostSocket);
     socketServer.current.on("receiveImage", (data) => {
       handleSocket(data, ids);
     });
@@ -48,7 +49,7 @@ export default function HomeAdmin() {
       });
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [handleSocket]);
 
   return (
     <div className="container">

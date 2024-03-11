@@ -1,11 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Webcam from "react-webcam";
-import socketIOClient from "socket.io-client";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import styles from "./streaming.module.css";
-import { hostSocket } from "../../common/constants";
 
-export default function Streaming() {
+export default function Streaming({ socket }) {
   const navigate = useNavigate();
   const { state } = useLocation();
 
@@ -13,11 +11,11 @@ export default function Streaming() {
     if (!state || !state.departmentId) {
       navigate("/");
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [navigate, state]);
 
   const webcamRef = useRef(null);
   const socketServer = useRef(null);
+  socketServer.current = socket;
   const [disabledBtn, setDisabledBtn] = useState(false);
   const [stop, setStop] = useState(true);
   const [wait, setWait] = useState(false);
@@ -68,7 +66,6 @@ export default function Streaming() {
   );
 
   useEffect(() => {
-    socketServer.current = socketIOClient.connect(hostSocket);
     socketServer.current.on("stopCaptureCommand", (data) => {
       handleData(data);
     });
@@ -78,8 +75,7 @@ export default function Streaming() {
         handleData(data);
       });
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [handleData]);
 
   return (
     <div className="container">
