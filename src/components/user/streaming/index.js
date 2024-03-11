@@ -70,7 +70,8 @@ export default function Streaming({ socketServer }) {
     return () => {
       socketServer.disconnect();
     };
-  }, [handleData, socketServer]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="container">

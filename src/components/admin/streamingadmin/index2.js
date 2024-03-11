@@ -51,7 +51,7 @@ export default function StreamingAdmin2({ socketServer }) {
       socketServer.disconnect();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [handleSocket, handleDisButton, socketServer]);
+  }, []);
 
   const handleStopCapture = useCallback(
     (departmentId) => {

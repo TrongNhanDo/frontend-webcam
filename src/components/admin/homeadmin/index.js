@@ -45,7 +45,7 @@ export default function HomeAdmin({ socketServer }) {
       socketServer.disconnect();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [handleSocket, socketServer]);
+  }, []);
 
   return (
     <div className="container">
