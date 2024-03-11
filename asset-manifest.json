@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/frontend-webcam/static/css/main.ea9f0b7e.css",
-    "main.js": "/frontend-webcam/static/js/main.e282ef8c.js",
+    "main.css": "/frontend-webcam/static/css/main.f9cc5686.css",
+    "main.js": "/frontend-webcam/static/js/main.4bf5c71d.js",
     "index.html": "/frontend-webcam/index.html",
-    "main.ea9f0b7e.css.map": "/frontend-webcam/static/css/main.ea9f0b7e.css.map",
-    "main.e282ef8c.js.map": "/frontend-webcam/static/js/main.e282ef8c.js.map"
+    "main.f9cc5686.css.map": "/frontend-webcam/static/css/main.f9cc5686.css.map",
+    "main.4bf5c71d.js.map": "/frontend-webcam/static/js/main.4bf5c71d.js.map"
   },
   "entrypoints": [
-    "static/css/main.ea9f0b7e.css",
-    "static/js/main.e282ef8c.js"
+    "static/css/main.f9cc5686.css",
+    "static/js/main.4bf5c71d.js"
   ]
 }
