@@ -73,7 +73,7 @@ export default function StreamingAdmin2() {
 
   useEffect(() => {
     socketServer.current.emit("sendDepartmentList", { listId: disButton });
-  }, [disButton]);
+  }, [disButton, imgLink]);
 
   return (
     <div className={styles.container}>
