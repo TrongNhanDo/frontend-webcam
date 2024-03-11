@@ -1,12 +1,14 @@
+import { io } from "socket.io-client";
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./homeadmin.module.css";
-import { dummyDepartment } from "../../common/constants";
+import { dummyDepartment, hostSocket } from "../../common/constants";
 
-export default function HomeAdmin({ socketServer }) {
+export default function HomeAdmin() {
   const navigate = useNavigate();
   const ids = [];
   const [arrayId, setArrayId] = useState([]);
+  const socketServer = io(hostSocket);
 
   const handleClick = useCallback(
     (departmentId, departmentName) => {

@@ -1,13 +1,19 @@
+import { io } from "socket.io-client";
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styles from "./streamingadmin2.module.css";
-import { dummyDepartment, notFaultImg } from "../../common/constants";
+import {
+  dummyDepartment,
+  hostSocket,
+  notFaultImg,
+} from "../../common/constants";
 
-export default function StreamingAdmin2({ socketServer }) {
+export default function StreamingAdmin2() {
   let buttons = [];
   let links = [];
   const [disButton, setDisButton] = useState([]);
   const [imgLink, setImgLink] = useState([]);
+  const socketServer = io(hostSocket);
 
   const handleSocket = useCallback((data) => {
     if (!data) return;

@@ -1,15 +1,18 @@
+import { io } from "socket.io-client";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Webcam from "react-webcam";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import styles from "./streaming.module.css";
+import { hostSocket } from "../../common/constants";
 
-export default function Streaming({ socketServer }) {
+export default function Streaming() {
   const navigate = useNavigate();
   const { state } = useLocation();
   const webcamRef = useRef(null);
   const [disabledBtn, setDisabledBtn] = useState(false);
   const [stop, setStop] = useState(true);
   const [wait, setWait] = useState(false);
+  const socketServer = io(hostSocket);
 
   useEffect(() => {
     if (!state || !state.departmentId) {
@@ -26,7 +29,8 @@ export default function Streaming({ socketServer }) {
         imageSrc,
       });
     },
-    [state.departmentId, socketServer]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [state.departmentId]
   );
 
   const handleCapture = useCallback(() => {
@@ -59,7 +63,8 @@ export default function Streaming({ socketServer }) {
         });
       }
     },
-    [state.departmentId, socketServer]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [state.departmentId]
   );
 
   useEffect(() => {
