@@ -2,12 +2,16 @@ import { io } from "socket.io-client";
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./home.module.css";
-import { dummyDepartment, hostSocket } from "../../common/constants";
+import {
+  dummyDepartment,
+  hostSocket,
+  socketHeader,
+} from "../../common/constants";
 
 export default function Home() {
   const navigate = useNavigate();
   const [listId, setListId] = useState([]);
-  const socketServer = io(hostSocket);
+  const socketServer = io(hostSocket, socketHeader);
 
   const handleClick = useCallback(
     (departmentId, departmentName) => {

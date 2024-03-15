@@ -2,13 +2,13 @@ import { io } from "socket.io-client";
 import { useCallback, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import styles from "./streamingadmin.module.css";
-import { hostSocket } from "../../common/constants";
+import { hostSocket, socketHeader } from "../../common/constants";
 
 export default function StreamingAdmin() {
   const navigate = useNavigate();
   const { state } = useLocation();
   const [disButton, setDisButton] = useState(true);
-  const socketServer = io(hostSocket);
+  const socketServer = io(hostSocket, socketHeader);
 
   useEffect(() => {
     if (!state || !state.departmentId) {

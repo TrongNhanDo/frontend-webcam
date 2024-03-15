@@ -6,6 +6,7 @@ import {
   dummyDepartment,
   hostSocket,
   notFaultImg,
+  socketHeader,
 } from "../../common/constants";
 
 export default function StreamingAdmin2() {
@@ -13,7 +14,7 @@ export default function StreamingAdmin2() {
   let links = [];
   const [disButton, setDisButton] = useState([]);
   const [imgLink, setImgLink] = useState([]);
-  const socketServer = io(hostSocket);
+  const socketServer = io(hostSocket, socketHeader);
 
   const handleSocket = useCallback((data) => {
     if (!data) return;

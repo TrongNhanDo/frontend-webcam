@@ -9,7 +9,7 @@ const mode = process.env.REACT_APP_ENV || "local";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <>
-    {mode === "local" ? (
+    {mode !== "local" ? (
       <HashRouter>
         <MainContextProvider>
           <App />

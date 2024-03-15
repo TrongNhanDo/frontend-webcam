@@ -3,7 +3,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Webcam from "react-webcam";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import styles from "./streaming.module.css";
-import { hostSocket } from "../../common/constants";
+import { hostSocket, socketHeader } from "../../common/constants";
 
 export default function Streaming() {
   const navigate = useNavigate();
@@ -12,7 +12,7 @@ export default function Streaming() {
   const [disabledBtn, setDisabledBtn] = useState(false);
   const [stop, setStop] = useState(true);
   const [wait, setWait] = useState(false);
-  const socketServer = io(hostSocket);
+  const socketServer = io(hostSocket, socketHeader);
 
   useEffect(() => {
     if (!state || !state.departmentId) {
