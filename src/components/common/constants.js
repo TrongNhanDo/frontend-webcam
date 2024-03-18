@@ -30,7 +30,7 @@ export const notFaultImg =
 
 export const hostSocket =
   process.env.REACT_APP_ENV === "local"
-    ? "https://840c-14-241-227-126.ngrok-free.app"
+    ? "http://localhost:4000/"
     : "https://backend-webcam.onrender.com/";
 
 export const socketHeader = {
