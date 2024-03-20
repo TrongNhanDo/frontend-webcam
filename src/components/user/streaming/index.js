@@ -1,9 +1,9 @@
 import { io } from "socket.io-client";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Webcam from "react-webcam";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import styles from "./streaming.module.css";
-import { hostSocket, socketHeader } from "../../common/constants";
+import { hostSocket, notFaultImg, socketHeader } from "../../common/constants";
 
 export default function Streaming() {
   const navigate = useNavigate();
@@ -13,6 +13,8 @@ export default function Streaming() {
   const [stop, setStop] = useState(true);
   const [wait, setWait] = useState(false);
   const socketServer = io(hostSocket, socketHeader);
+  const [socketId, setSocketId] = useState("");
+  const [img, setImg] = useState("");
 
   useEffect(() => {
     if (!state || !state.departmentId) {
@@ -27,10 +29,11 @@ export default function Streaming() {
       socketServer.emit("sendImage", {
         departmentId: state.departmentId,
         imageSrc,
+        socketId,
       });
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [state.departmentId]
+    [state.departmentId, socketId]
   );
 
   const handleCapture = useCallback(() => {
@@ -68,6 +71,16 @@ export default function Streaming() {
   );
 
   useEffect(() => {
+    socketServer.on("connect", () => {
+      setSocketId(socketServer.id);
+    });
+
+    socketServer.on("receiveImage", (data) => {
+      if (data.socketId !== socketId) {
+        setImg(data.imageSrc);
+      }
+    });
+
     socketServer.on("stopCaptureCommand", (data) => {
       handleData(data);
     });
@@ -83,7 +96,8 @@ export default function Streaming() {
       <div className={styles.stream}>
         {!wait ? (
           <>
-            <h2>{state.departmentName || ""}</h2>
+            <h2>{"Video Real-time"}</h2>
+            <br />
             <div className={styles.divImg}>
               <Webcam
                 audio={false}
@@ -93,14 +107,16 @@ export default function Streaming() {
                   facingMode: "user",
                 }}
               />
+              <img src={img || notFaultImg} alt="" />
             </div>
+            <br />
             <div className={styles.divBtn}>
               <button
                 className={styles.start}
                 disabled={disabledBtn}
                 onClick={handleCapture}
               >
-                START CAPTURE
+                START VIDEO CALL
               </button>
             </div>
           </>
@@ -114,11 +130,6 @@ export default function Streaming() {
             />
           </>
         )}
-
-        <Link className={styles.back} to={"/"}>
-          <i className="fa-solid fa-backward"></i>
-          {" Previous"}
-        </Link>
       </div>
     </div>
   );
